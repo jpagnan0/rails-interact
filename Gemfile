@@ -22,7 +22,12 @@ gem 'puma', '~> 3.11'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 gem 'pry-rails', :group => :development
+gem 'pry-byebug'
 gem 'rest-client'
+gem 'rails-erd', group: :development
+gem 'activerecord-reset-pk-sequence'
+# gem 'faraday'
+# gem 'faraday_middleware'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
