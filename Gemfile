@@ -15,17 +15,10 @@ gem 'puma', '~> 3.11'
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
-
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
-gem 'pry-rails', :group => :development
-gem 'pry-byebug'
-gem 'rest-client'
-gem 'rails-erd', group: :development
-gem 'activerecord-reset-pk-sequence'
 # gem 'faraday'
 # gem 'faraday_middleware'
 # Reduces boot times through caching; required in config/boot.rb
@@ -49,3 +42,12 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+gem 'bcrypt', '~> 3.1.7'
+gem 'jwt'
+gem 'active_model_serializers', '~> 0.10.0'
+gem 'pry-rails', :group => :development
+gem 'pry-byebug'
+gem 'rest-client'
+gem 'rails-erd', group: :development
+gem 'activerecord-reset-pk-sequence'
