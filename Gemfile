@@ -51,3 +51,4 @@ gem 'pry-byebug'
 gem 'rest-client'
 gem 'rails-erd', group: :development
 gem 'activerecord-reset-pk-sequence'
+gem 'figaro'
