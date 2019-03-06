@@ -1,21 +1,28 @@
 class Api::V1::AuthController < ApplicationController
-  def login
-		@user = User.find_by(username: params[:username])
+  # skip_before_action :authorized, only: [:create]
+  def create
+    @user = User.find_by(username: user_login_params[:username])
+    if @user && @user.authenticate(user_login_params[:password])
+      token = encode_token({ user_id: @user.id })
+      render json: { user: UserSerializer.new(@user), jwt: token }  #, status: :accepted
+    else
+      render json: { message: 'Invalid username or password' } #, status: :unauthorized
+    end
+  end
 
-		if @user && @user.authenticate(params[:password])
-			token = encode_token(@user.id)
+  def get_current_user
 
-			render json: {user: UserSerializer.new(@user), token: token}
-		else
-			render json: {errors: "WHOA! You dun goofed!"}
-		end
-	end
+    if current_user
+      render json: current_user
+    else
+      render json: { errors: "No user" }
+    end
 
-	def get_user_from_token
-			if curr_user
-				render json: curr_user
-			else
-				render json: {errors: "WHOA! User not found!"}
-			end
-	end
+  end
+
+  private
+
+  def user_login_params
+    params.require(:user).permit(:username, :password)
+  end
 end
