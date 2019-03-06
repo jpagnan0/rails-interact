@@ -22,6 +22,7 @@ class Api::V1::UsersController < ApplicationController
     render json: { medications: @user_meds }
     # render json: { UserSerializer.mew(@user_meds) }
   end
+
   private
   def user_params
     params.require(:user).permit(:name, :username, :password )
