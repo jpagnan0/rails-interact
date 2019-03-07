@@ -79,6 +79,11 @@ class GetUserInteractions
   end
 
   def create_interactions
+    # if !@results
+    #   []
+    # else
+    #   Interaction.create(interaction_med_ids) unless @results
+    # end
     if !@results
       return {}
     else
