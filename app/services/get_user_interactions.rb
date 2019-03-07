@@ -19,9 +19,20 @@ class GetUserInteractions
   def interaction_description(interaction)
     interaction['interactionPair'].select do |pair|
       pair['interactionConcept']
+
     end.map do |concept|
       concept['description']
     end[0]
+  end
+
+  def names(interaction)
+    c = []
+    interaction['interactionPair'].select do |pair|
+      pair['interactionConcept'].map do |concept|
+        c << concept['minConceptItem']['name']
+      end
+    end
+    c
   end
 
   def parse_interaction_results(res)
@@ -36,59 +47,32 @@ class GetUserInteractions
         {
           comment: interaction['comment'],
           interaction_pair: { medication_one: interaction['minConcept'][0]['rxcui'], medication_two: interaction['minConcept'][1]['rxcui'] },
-          description: interaction_description(interaction)
-          # interaction_pair: interaction["interactionPair"]
+          description: interaction_description(interaction),
+          name_one: names(interaction)[0],
+          name_two: names(interaction)[1]
         }
       end
-    #   {}
-    # end
     interaction_pairs
   end
 
   def fetch_interactions_from_api
-    # byebug
     user_rxcuis = @user.medications.pluck(:rxcui).join('+')
     res = RestClient.get interactions_url(user_rxcuis)
-    # byebug
     @results = parse_interaction_results(res)
-    # binding.pry
-    # JSON.parse(res)["fullInteractionTypeGroup"]
-    # interaction_group = @results.select do |group|
-    #   group["fullInteractionType"]
-    # end.map do |group|
-    #   group["fullInteractionType"]
-    # end.flatten
-
-    # render json: @results
   end
-
-  # def rxcui_one
-  #   rxcui=nil
-  #   @results.select do |interaction|
-  #     rxcui=interaction[:interaction_pair][:medication_one]
-  #   end
-  #   rxcui
-  # end
-  #
-  # def rxcui_two
-  #   rxcui=nil
-  #   @results.select do |interaction|
-  #     rxcui=interaction[:interaction_pair][:medication_two]
-  #   end
-  #   rxcui
-  # end
 
   def interaction_med_ids
     if !@results
       return {}
     end
       @results.map do |interaction|
-        # binding.pry
         {
           medication_one_id: Medication.find_by(rxcui: interaction[:interaction_pair][:medication_one]).id,
           medication_two_id: Medication.find_by(rxcui: interaction[:interaction_pair][:medication_two]).id,
           comment: interaction[:comment],
-          description: interaction[:description]
+          description: interaction[:description],
+          name_one: interaction[:name_one],
+          name_two: interaction[:name_two]
         }
 
     end.flatten
@@ -100,15 +84,7 @@ class GetUserInteractions
     else
       Interaction.create(interaction_med_ids)
     end
-    # interaction_med_ids
-    # binding.pry
-    # medication_one_id = Medication.find_by(rxcui: rxcui_one).id
-    # medication_two_id = Medication.find_by(rxcui: rxcui_two).id
-    # Interaction.where(:medication_one_id => interaction_med_ids[:medication_one_id], :medication_two_id => interaction_med_ids[:medication_two_id]).first_or_create do |interaction|
-    #  interaction.comment = interaction_med_ids[:comment]
-    #  interaction.description = interaction_med_ids[:description]
+
   end
-  # binding.pry
-  # byebug
-  # Interaction.create()
+
 end
