@@ -17,17 +17,23 @@ class Api::V1::UsersController < ApplicationController
     end
   end #end create method
 
-  def user_medications
-    @user_meds = User.find_by(id: user_med_params[:id]).medications
-    render json: { medications: @user_meds }
+  def current_user_medications
+    # binding.pry
+    # @user_meds = UserMedication.find_by(user_id: user_med_params[:id]).medications
+    # render json: { medications: @user_meds }
+    render json: current_user.medications
+    # render json: { UserSerializer.mew(@user_meds) }
+  end
+  def current_user_interactions
+    # binding.pry
+    # @user_meds = UserMedication.find_by(user_id: user_med_params[:id]).medications
+    # render json: { medications: @user_meds }
+    render json: current_user.interactions
     # render json: { UserSerializer.mew(@user_meds) }
   end
 
   private
   def user_params
     params.require(:user).permit(:name, :username, :password )
-  end
-  def user_med_params
-    params.permit(:id)
   end
 end #end UsersController
