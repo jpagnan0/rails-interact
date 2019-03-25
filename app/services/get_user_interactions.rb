@@ -61,21 +61,21 @@ class GetUserInteractions
     @results = parse_interaction_results(res)
   end
 
-  def interaction_med_ids
+  def interaction_struct
     if !@results
       return {}
     end
       @results.map do |interaction|
         {
-          medication_one_id: Medication.find_by(rxcui: interaction[:interaction_pair][:medication_one]).id,
-          medication_two_id: Medication.find_by(rxcui: interaction[:interaction_pair][:medication_two]).id,
+          medication_one: Medication.find_by(rxcui: interaction[:interaction_pair][:medication_one]).id,
+          medication_two: Medication.find_by(rxcui: interaction[:interaction_pair][:medication_two]).id,
           comment: interaction[:comment],
           description: interaction[:description],
           name_one: interaction[:name_one],
           name_two: interaction[:name_two]
         }
 
-    end.flatten
+    end
   end
 
   def create_interactions
@@ -87,7 +87,18 @@ class GetUserInteractions
     if !@results
       return {}
     else
-      Interaction.create(interaction_med_ids)
+
+    interaction_struct.map do |i| 
+      Interaction.find_or_create_by(
+        medication_one_id: i[:medication_one],
+        medication_two_id: i[:medication_two],
+        comment: i[:comment],
+        description: i[:description],
+        name_one: i[:name_one],
+        name_two: i[:name_two]
+      )
+    end
+      # binding.pry
     end
 
   end

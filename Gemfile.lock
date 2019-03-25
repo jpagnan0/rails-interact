@@ -58,6 +58,8 @@ GEM
       activesupport
     choice (0.2.0)
     coderay (1.1.2)
+    composite_primary_keys (11.2.0)
+      activerecord (~> 5.2.1)
     concurrent-ruby (1.1.4)
     crass (1.0.4)
     domain_name (0.5.20180417)
@@ -183,6 +185,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.1.0)
   byebug
+  composite_primary_keys
   figaro
   jwt
   listen (>= 3.0.5, < 3.2)

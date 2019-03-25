@@ -7,8 +7,8 @@ class Api::V1::InteractionsController < ApplicationController
 
 
   def user_interactions
-
-    user = User.find_by(id: params[:id])
+    # binding.pry
+    user = User.find(params[:id].to_i)
     user_medication_interactions=GetUserInteractions.new(user).execute
     render json: user_medication_interactions
       #
