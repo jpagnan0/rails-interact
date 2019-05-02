@@ -53,3 +53,4 @@ gem 'rails-erd', group: :development
 gem 'activerecord-reset-pk-sequence'
 gem 'figaro'
 gem 'composite_primary_keys'
+gem 'foreman'
