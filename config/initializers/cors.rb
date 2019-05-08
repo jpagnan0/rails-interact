@@ -7,8 +7,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins '*'
-
+    origins '*', 'http://localhost:3000', 'https://interact-io-api.herokuapp.com/' #replace this url with that of your own heroku client app
     resource '*',
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head]
