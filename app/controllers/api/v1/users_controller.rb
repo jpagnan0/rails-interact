@@ -16,7 +16,7 @@ class Api::V1::UsersController < ApplicationController
     @user = User.create(user_params)
     if @user.valid?
       @token = encode_token(user_id: @user.id)
-      @user_rxs = GetUserInteractions.new(@user).execute
+      @user_rxs =
       render json: { user: UserSerializer.new(@user), jwt: @token }, status: :created
     else
       render json: { error: 'something went wrong!' }, status: :not_acceptable
@@ -35,6 +35,9 @@ class Api::V1::UsersController < ApplicationController
   end
   def current_user_interactions
     # binding.pry
+    unless current_user == nil
+      GetUserInteractions.new(current_user).execute
+    end
     # @user_meds = UserMedication.find_by(user_id: user_med_params[:id]).medications
     render json: current_user.interactions
     # @user_rxs.execute

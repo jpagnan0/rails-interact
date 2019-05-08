@@ -17,18 +17,18 @@ class GetUserInteractions
   end
 
   def interaction_description(interaction)
-    interaction["interactionPair"].select do |pair|
-      pair["interactionConcept"]
+    interaction['interactionPair'].select do |pair|
+      pair['interactionConcept']
     end.map do |concept|
-      concept["description"]
+      concept['description']
     end[0]
   end
 
   def names(interaction)
     c = []
-    interaction["interactionPair"].select do |pair|
-      pair["interactionConcept"].map do |concept|
-        c << concept["minConceptItem"]["name"]
+    interaction['interactionPair'].select do |pair|
+      pair['interactionConcept'].map do |concept|
+        c << concept['minConceptItem']['name']
       end
     end
     c
@@ -44,9 +44,11 @@ class GetUserInteractions
     end.map do |group|
       group["fullInteractionType"]
     end.flatten
-    # binding.pry
-    # end
+      # binding.pry
+      # end
+
     interaction_pairs = interaction_group.map do |interaction|
+      # binding.pry
       {
         comment: interaction["comment"],
         interaction_pair: {
@@ -63,10 +65,13 @@ class GetUserInteractions
 
   def fetch_interactions_from_api
     # binding.pry
-    user_rxcuis = @user.medications.pluck(:rxcui).join("+")
-    res = RestClient.get("https://rxnav.nlm.nih.gov/REST/interaction/list.json?rxcuis="+user_rxcuis) #interactions_url(user_rxcuis)
+    unless @user.medications.nil?
+      user_rxcuis = @user.medications.pluck(:rxcui).join('+')
+      res = RestClient.get("https://rxnav.nlm.nih.gov/REST/interaction/list.json?rxcuis=#{user_rxcuis}") # interactions_url(user_rxcuis)
+      @results = parse_interaction_results(res)
+    end
     # binding.pry
-    @results = parse_interaction_results(res)
+    @results
   end
 
   def interaction_struct
@@ -76,8 +81,8 @@ class GetUserInteractions
       m_one_id = Medication.find_by(rxcui: interaction[:interaction_pair][:medication_one]).id
       m_two_id = Medication.find_by(rxcui: interaction[:interaction_pair][:medication_two]).id
       {
-        medication_one: m_one_id,#Medication.find_by(rxcui: interaction[:interaction_pair][:medication_one]).id,
-        medication_two: m_two_id,#Medication.find_by(rxcui: interaction[:interaction_pair][:medication_two]).id,
+        medication_one: m_one_id,  # Medication.find_by(rxcui: interaction[:interaction_pair][:medication_one]).id,
+        medication_two: m_two_id,  # Medication.find_by(rxcui: interaction[:interaction_pair][:medication_two]).id,
         comment: interaction[:comment],
         description: interaction[:description],
         name_one: interaction[:name_one],
