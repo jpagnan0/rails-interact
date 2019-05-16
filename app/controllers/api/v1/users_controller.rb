@@ -16,7 +16,6 @@ class Api::V1::UsersController < ApplicationController
     @user = User.create(user_params)
     if @user.valid?
       @token = encode_token(user_id: @user.id)
-      @user_rxs =
       render json: { user: UserSerializer.new(@user), jwt: @token }, status: :created
     else
       render json: { error: 'something went wrong!' }, status: :not_acceptable
